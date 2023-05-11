@@ -636,7 +636,7 @@ namespace XLua
         }
 #endif
 
-#if (!UNITY_SWITCH && !UNITY_WEBGL) || UNITY_EDITOR
+#if !UNITY_SWITCH || UNITY_EDITOR
         [MonoPInvokeCallback(typeof(LuaCSFunction))]
         internal static int LoadSocketCore(RealStatePtr L)
         {
@@ -812,29 +812,6 @@ namespace XLua
 #else
             try
             {
-                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-                string assemblyName = LuaAPI.lua_tostring(L, 1);
-
-                Assembly assembly = null;
-
-                try
-                {
-                    assembly = Assembly.Load(assemblyName);
-                }
-                catch (BadImageFormatException)
-                {
-                    // The assemblyName was invalid.  It is most likely a path.
-                }
-
-                if (assembly == null)
-                {
-                    assembly = Assembly.Load(AssemblyName.GetAssemblyName(assemblyName));
-                }
-
-                if (assembly != null && !translator.assemblies.Contains(assembly))
-                {
-                    translator.assemblies.Add(assembly);
-                }
                 return 0;
             }
             catch (System.Exception e)
